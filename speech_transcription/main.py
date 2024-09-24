@@ -4,10 +4,10 @@ import io
 import wave
 import openai
 import soundfile as sf
-import os
-import asyncio
+import keys
 
-
+# Load environment variables from keys module
+openai.api_key = keys.OPENAI_API_KEY
 samplerate = 16000  # use 16kHz audio for best performance
 batch_duration = 10  # 10 second recording time
 transcription_file = 'transcription.txt'
