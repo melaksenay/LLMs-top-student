@@ -6,9 +6,10 @@ import openai
 import soundfile as sf
 import os
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = api key here
 samplerate = 16000  # use 16kHz audio for best performance
-batch_duration = 10  # 10 second recording time
+batch_duration = 120  # 10 second recording time
+transcription_file = 'transcription.txt'
 
 # Function to record a batch of audio
 def record_audio(duration, samplerate, device=None):
@@ -120,6 +121,9 @@ def main():
     #Transcribe audio batch
     transcription_text = transcribe_audio(audio_wav, response_format="text")
 
+    with open(transcription_file, 'a') as file:
+        # Write the transcription to a file
+        file.write(transcription_text)
     # resultss
     print(f"Transcription: {transcription_text}")
 
