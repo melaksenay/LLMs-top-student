@@ -1,0 +1,18 @@
+Okay, so this is a test of the program. We are just reading...
+
+audio in and sampling it and I'm gonna ask model now
+
+Uh, can it summarize everything? Can you summarize the entire history of this?
+
+Let's see if it can summarize everything.
+
+It says it cannot provide a summary of the entire history.
+
+To summarize, this message is a release of...
+
+Just this chat.
+
+Sure, okay, so I think that this is kind of working.
+
+チャンネル登録をお願いいたします。
+

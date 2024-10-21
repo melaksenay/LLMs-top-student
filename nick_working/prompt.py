@@ -30,13 +30,15 @@ with open(transcription_file, 'r') as file:
 # Load the API key from the environment variable
 client = OpenAI()
 
-completion = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
+messages=[
         {"role": "system", "content": "You are an attentive tutor with expertise in academic matters. You are given a transcription from a lecture and expected to answer questions from a student."},
         {"role": "user", "content": transcription},
         {"role": "user", "content": "Summarize the most valuable concepts introduced in the transcription (at most 10 words)."}
     ]
+
+completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=messages
 )
 
 print(completion.choices[0].message.content)
