@@ -32,8 +32,7 @@ async def async_transcribe_batch(executor, q, prompter):
 
         # Process the transcription with Prompter
         if transcript:
-            prompter.append(transcript)  # Append the result to the prompter for further GPT interaction
-            highlight = prompter.prompt()  # Get the highlight or GPT response
+            highlight = prompter.append(transcript)  # Append the result to the prompter for further GPT interaction
             print(f"GPT Highlight: {highlight}")
 
         
@@ -43,17 +42,6 @@ def record_audio_wrapper(q, batch_len, sample_rate):
         q.put(record_audio(batch_len, sample_rate))
 
 
-'''
-# Function to handle real-time user input concurrently with transcription
-async def handle_user_prompts(prompter):
-    while True:
-        pass
-    
-        user_input = input("Questions?: ")
-        prompter.ask(user_input)
-        response = prompter.prompt()  # Process the user prompt
-        print(f"GPT Response: {response}")
-'''
 async def handle_user_prompts(prompter):
     loop = asyncio.get_event_loop()
 
@@ -70,8 +58,7 @@ async def handle_user_prompts(prompter):
 
         
             # then prompt the model.
-            prompter.ask(user_input)
-            response = prompter.prompt()  # Process the user prompt
+            response = prompter.ask(user_input)
             print(f"User Input: {user_input}")
             print(f"GPT Response: {response}")
 
