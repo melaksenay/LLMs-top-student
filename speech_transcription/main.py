@@ -1,3 +1,4 @@
+import keys
 import sounddevice as sd
 import numpy as np
 import io
@@ -5,10 +6,13 @@ import wave
 import openai
 import soundfile as sf
 import os
-import keys
+import asyncio
+from deepgram import (
+    DeepgramClient,
+    PrerecordedOptions,
+    FileSource,
+)
 
-# Load environment variables from keys module
-openai.api_key = os.getenv("OPENAI_API_KEY")
 samplerate = 16000  # use 16kHz audio for best performance
 batch_duration = 10  # 10 second recording time
 transcription_file = 'transcription.txt'
@@ -32,27 +36,10 @@ def record_audio(duration, samplerate, device=None):
         print(f"An error occurred during recording: {e}")
         return None
 
-# Function to save audio to a WAV format for API use
-def save_audio_to_wav(audio_data, samplerate):
-    if audio_data is None:
-        raise ValueError("No audio data to save.")
-    if not isinstance(audio_data, np.ndarray):
-        raise TypeError("audio_data must be a NumPy array.")
-    if audio_data.dtype != np.float32 and audio_data.dtype != np.float64:
-        raise TypeError("audio_data must be of type float32 or float64.")
-    
-    # Normalize and convert to int16
-    wav_data = (audio_data * 32767).astype(np.int16)
-    
-    # Create a BytesIO object and write the WAV data into it
-    buffer = io.BytesIO()
-    sf.write(buffer, wav_data, samplerate, format='WAV', subtype='PCM_16')
-    buffer.seek(0)  # Reset buffer pointer to the beginning
-    
-    # Assign a name attribute to the BytesIO object
-    buffer.name = 'audio.wav'
-    
-    return buffer
+#save audio to a wav file for API use.
+def save_audio_to_wav(audio_batch, samplerate, filename="output.wav"):
+    sf.write(filename, audio_batch, samplerate, format='WAV')
+    return filename
 
 # Whisper API
 def transcribe_audio(audio_file, response_format="text"):
@@ -95,6 +82,7 @@ def transcribe_audio_object(wav, filename="batch.txt", session_filename = 'sessi
     # write batch,
     with open(filename, 'w', encoding="utf-8") as file:
         # Write the transcription to a file
+    
         file.write(transcription_text)
 
     # write session,
@@ -187,15 +175,45 @@ def main():
     except TypeError as te:
         print(f"Error saving audio: {te}")
         return  # Exit the program
+    AUDIO_FILE = audio_wav
+    try:
+        # STEP 1 Create a Deepgram client using the API key
+        deepgram = DeepgramClient(api_key=keys.DEEPGRAM)
 
-    # Transcribe audio batch
-    transcription_text = transcribe_audio(audio_wav, response_format="text")
+        with open(AUDIO_FILE, "rb") as file:
+            buffer_data = file.read()
 
-    with open(transcription_file, 'a') as file:
-        # Write the transcription to a file
-        file.write(transcription_text)
-    # resultss
-    print(f"Transcription: {transcription_text}")
+        payload: FileSource = {
+            "buffer": buffer_data,
+        }
+
+        #STEP 2: Configure Deepgram options for audio analysis
+        options = PrerecordedOptions(
+            model="nova-2",
+            smart_format=True,
+            summarize="v2",
+            topics=True,
+            punctuate=True,
+            paragraphs=True,
+        )
+
+        # STEP 3: Call the transcribe_file method with the text payload and options
+        response = deepgram.listen.rest.v("1").transcribe_file(payload, options)
+
+        # STEP 4: Print the response
+        print(response.to_json(indent=4))
+
+    except Exception as e:
+        print(f"Deepgram Exception: {e}")
+
+    # # Transcribe audio batch
+    # transcription_text = transcribe_audio(audio_wav, response_format="text")
+
+    # with open(transcription_file, 'a') as file:
+    #     # Write the transcription to a file
+    #     file.write(transcription_text)
+    # # resultss
+    # print(f"Transcription: {transcription_text}")
 
 if __name__ == "__main__":
     main()
