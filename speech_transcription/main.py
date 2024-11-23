@@ -1,4 +1,4 @@
-import keys
+#import keys
 import sounddevice as sd
 import numpy as np
 import io
@@ -44,6 +44,40 @@ def save_audio_to_wav(audio_batch, samplerate, filename="output.wav"):
 # Whisper API
 def transcribe_audio(audio_file, response_format="text"):
     try:
+        with open('DGKEY.txt', 'r') as file:
+            # Read the content and strip any whitespace/newline characters
+            dgkey = file.readline().strip()
+        # STEP 1 Create a Deepgram client using the API key DEEPGRAM = "c8130b321c9268da2ba8b7ff8ad8f8fc998ec628"
+        deepgram = DeepgramClient(api_key=dgkey)
+
+        with open(audio_file, "rb") as file:
+            buffer_data = file.read()
+
+        payload: FileSource = {
+            "buffer": buffer_data,
+        }
+
+        #STEP 2: Configure Deepgram options for audio analysis
+        options = PrerecordedOptions(
+            model="nova-2",
+            smart_format=True,
+            summarize="v2",
+            topics=True,
+            punctuate=True,
+            paragraphs=True,
+        )
+
+        # STEP 3: Call the transcribe_file method with the text payload and options
+        response = deepgram.listen.rest.v("1").transcribe_file(payload, options)
+
+        # STEP 4: Print the response
+        print(response.to_json(indent=4))
+        #print()
+        return response['results']['channels'][0]['alternatives'][0]['transcript'] + " || " + (response['results']['topics']['segments'][0].text if len(response['results']['topics']['segments']) else "")
+    except Exception as e:
+        print(f"Deepgram Exception: {e}")
+    return 
+    try:
         #print("Transcribing audio...")
         transcription = openai.audio.transcriptions.create(
             model="whisper-1",
@@ -60,7 +94,7 @@ def transcribe_audio(audio_file, response_format="text"):
             print(f"Unsupported response format: {response_format}")
             return ""
     except Exception as e:
-        print(f"An error occurred during transcription: {e}")
+        print(f"An error occurred during transcription, deepgram: {e}")
         return ""
 
 
@@ -177,8 +211,8 @@ def main():
         return  # Exit the program
     AUDIO_FILE = audio_wav
     try:
-        # STEP 1 Create a Deepgram client using the API key
-        deepgram = DeepgramClient(api_key=keys.DEEPGRAM)
+        # STEP 1 Create a Deepgram client using the API key DEEPGRAM = "c8130b321c9268da2ba8b7ff8ad8f8fc998ec628"
+        deepgram = DeepgramClient(api_key="c8130b321c9268da2ba8b7ff8ad8f8fc998ec628")
 
         with open(AUDIO_FILE, "rb") as file:
             buffer_data = file.read()

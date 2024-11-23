@@ -1,16 +1,20 @@
-we are still currently testing the program we are still currently testing the program testing the program is very important we are still testing the program we're still testing the
-
-we're currently still testing the program still testing the program we're still testing the program currently we are still asking the program we are currently still
-
-Still testing the program.
-
-Currently still testing the program, but that's OK. Currently still testing the program. Currently still testing the program. We're currently still testing the program. Currently still testing the program, but that's OK.
-
-The program currently still testing the program currently still testing the program. Now we're going to test the user input for the program we're going to test the user input for the program we're going to test the user
-
-We're gonna test the user input for the program and that's okay.
-
-What's the condensed lecture about? What's the lecture about? So let's see if the program can handle the user input now. Going to test the user input. Testing user input.
-
-You don't have to leave the room, but...
-
+ || 
+ || 
+Hey. Could you turn this down for a sec? || Could you turn this down for a sec?
+ || 
+So, this is the the motivation we're going to talk about, and || 
+In the remainder of this lecture, I'll take you through the structure of the course, and then describe, a little bit more some of the motivations for why I should study a deep reinforcement. || In the remainder of this lecture, I'll take you through the structure of the course, and then describe, a little bit more some of the motivations for why I should study a deep reinforcement.
+Let's talk about what we'll cover in the class. So this course goes through. || So this course goes through.
+A variety of deep reinforcement methods. It's true very broadly, but we'll start with some basics. Let's start by talking about how we can take a journey for supervised learning. || Let's start by talking about how we can take a journey for supervised learning.
+Methods do decision making methods, provide some definitions, and generally, you come to understand the reinforcement problem. Then we have a unit of model for your reinforcement problems. || Then we have a unit of model for your reinforcement problems.
+We will cover cumulative policy gradient and actual credit methods, and we'll have some homework script with the UNIX. And then we'll have another unit on model based algorithms. We'll talk about planning on to control. || We'll talk about planning on to control.
+Sequence models, images, and things like that. And then we have a variety of more advanced topics. We're going to cover exploration algorithms. We're going to cover algorithms for offline reinforcement. || We're going to cover exploration algorithms. We're going to cover algorithms for offline reinforcement.
+ || 
+ || 
+ || 
+ || 
+ || 
+ || 
+ || 
+ || 
+ || 
