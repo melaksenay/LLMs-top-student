@@ -3,7 +3,7 @@ import requests
 url = "https://fastapi-service-940454193602.us-central1.run.app"
 url = "http://127.0.0.1:8000"
 #url = "http://127.0.0.1:8080"
-url = "https://fastapi-service-940454193602.us-central1.run.app"
+#url = "https://fastapi-service-940454193602.us-central1.run.app"
 print("test")
 # Test /process_wav_data/
 current_transcript = ""

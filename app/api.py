@@ -139,7 +139,7 @@ async def process_wav_file(file: UploadFile = File(...), condensed_transcript: s
         {"role":"user", "content": content_strategy[0] + result['transcript']}
         ])
     
-    result['condensed_transcript'] = condensed_transcript + result['inFsight']
+    result['condensed_transcript'] = condensed_transcript + result['insight']
     return JSONResponse(content=result)
 
 @app.post("/question/")
