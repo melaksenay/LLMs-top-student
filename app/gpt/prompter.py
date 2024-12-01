@@ -1,8 +1,8 @@
 import openai
 
 class Prompter:
-    def __init__(self):
-        self.messages = [{"role": "user", "content": "Condensed Transcript: "}]
+    def __init__(self, condensed_transcript = ""):
+        self.messages = [{"role": "user", "content": "Condensed Transcript: " + condensed_transcript}]
         self.client = openai.OpenAI(api_key=openai.api_key)
 
         self.model_thought = ""
@@ -25,8 +25,11 @@ class Prompter:
         ## what we want 
         pass 
 
-    def prompt(self):
-        self.messages = [self.messages[0], self.messages[-1]] # may introduce concurrency issues. condensed summary + recentmost prompt.
+    def prompt(self, messages=None):
+        if messages:
+            self.messages = messages
+        else: 
+            self.messages = [self.messages[0], self.messages[-1]] # may introduce concurrency issues. condensed summary + recentmost prompt.
         completion = self.client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=self.messages

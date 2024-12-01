@@ -41,6 +41,46 @@ def save_audio_to_wav(audio_batch, samplerate, filename="output.wav"):
     sf.write(filename, audio_batch, samplerate, format='WAV')
     return filename
 
+def transcribe_audio_bytes(audio_bytes, response_format="text"):
+    try:
+        # Read the Deepgram API key from a file
+        '''
+        with open('DGKEY.txt', 'r') as file:
+            dgkey = file.readline().strip()
+        
+        # Initialize the Deepgram client with the API key
+        deepgram = DeepgramClient(dgkey)
+        '''
+        deepgram = DeepgramClient('')
+        # Prepare the audio source as a bytes object
+        source = {'buffer': audio_bytes, 'mimetype': 'audio/wav'}
+
+        # Configure Deepgram options for audio analysis
+        options = {
+            'model': 'nova-2',
+            'smart_format': True,
+            'summarize': 'v2',
+            'topics': True,
+            'punctuate': True,
+            'paragraphs': True,
+        }
+
+        # Transcribe the audio using Deepgram's transcribe method
+        response = deepgram.listen.rest.v("1").transcribe_file(source, options)
+
+        print(response)
+        #transcript = response['results']['channels'][0]['alternatives'][0]['transcript']
+        
+
+        return {"transcript": response['results']['channels'][0]['alternatives'][0]['transcript'],
+                "insight": (response['results']['topics']['segments'][0].text if len(response['results']['topics']['segments']) else "")
+                }
+
+    except Exception as e:
+        print(f"Deepgram Exception: {e}")
+        return {"transcript": f"ERROR: {e}", "insight": "{e}"}
+
+
 # Whisper API
 def transcribe_audio(audio_file, response_format="text"):
     try:
@@ -76,26 +116,7 @@ def transcribe_audio(audio_file, response_format="text"):
         return response['results']['channels'][0]['alternatives'][0]['transcript'] + " || " + (response['results']['topics']['segments'][0].text if len(response['results']['topics']['segments']) else "")
     except Exception as e:
         print(f"Deepgram Exception: {e}")
-    return 
-    try:
-        #print("Transcribing audio...")
-        transcription = openai.audio.transcriptions.create(
-            model="whisper-1",
-            file=audio_file,
-            response_format=response_format  #response format is text by default.
-        )
-        #print("Transcription completed.")
-        
-        if response_format == "text":
-            return transcription  # Directly return the string
-        elif response_format in ["json", "verbose_json"]:
-            return transcription.get('text', '')  #access the 'text' key
-        else:
-            print(f"Unsupported response format: {response_format}")
-            return ""
-    except Exception as e:
-        print(f"An error occurred during transcription, deepgram: {e}")
-        return ""
+        return 
 
 
 # transcribe batch function.
