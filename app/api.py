@@ -92,10 +92,13 @@ prompter = Prompter()
 transcript_strategy = ["Condensed Transcript: "] # so that we prepend different transcript prompts.
 # prepend to prompts to chatgpt. 
 content_strategy = [
-    'provide a 10 word or less summary of the following content, given the condensed transcript, saying "N" if nothing worth distracting the student showed in the new content: ',
+    'You will receive a condensed transcript of a lecture. If it has significant educational value to a student sitting in this lecture, summarize it in about 10 words and respond with "Summary: ...", if not, respond with "N"',
                     ]
+# content_strategy = [
+#     'provide a 10 word or less summary of the following content, given the condensed transcript, saying "N" if nothing worth distracting the student showed in the new content: ',
+#                     ]
 question_strategy = [
-    "Please answer this question in the context of the lecture: "
+    "Please answer this question, in less than 10 words, in the context of the condensed transcript: "
 ]
 
 '''
